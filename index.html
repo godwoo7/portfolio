@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="imagetoolbar" content="no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="robots" content="noindex, nofollow">
+
+    <title>WildBricks</title>
+    <link rel="stylesheet" href="https://cdn.rawgit.com/hiun/NanumSquare/master/nanumsquare.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Liu+Jian+Mao+Cao&display=swap">
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./jquery.js">
+    
+    <style>
+        body,html{clear: both;position: relative;}
+        /* 사이드메뉴*/
+        .collap{position: fixed;top: 0;right: -110%;z-index: 80;background-color: rgba(123,123,123,5);width: 100vw;height: 100vh;padding-top: 90px;box-sizing: border-box;transition: 0.7s;}
+        .collap.on{right: 0;}
+        .collap li{clear: both;position: relative;}
+        .collap li a{display: block;height: 32px;}
+        .collap li a.dep1{color: #ccc;line-height: 3;padding-left: 3em;height: 42px;font-size: 1.2rem;font-weight: bold;}
+        .collap li a.dep1:after{content: "▼";position: absolute;left: 70%;}
+        .collap li.on a.dep1:after{content: "▲"}
+        .collap li ul.dep2{
+            opacity: 1;width: 100%;height: auto;background: transparent;position: static;
+            display: none;
+        }
+        .collap li.on ul.dep2{/* 대메뉴 li가 on상태이면 .dep2(서브메뉴)가 보이게 해라 */
+            display: block;}
+        .collap li ul.dep2 li{
+            line-height: 2;
+        }
+         .collap li ul.dep2 li a{
+            color: #333;font-size: 1rem;
+        }
+        
+        /* 헤더영역*/
+        .hd{clear: both;position: fixed;top: 0;left: 0;z-index: 90;width: 100%;height: 90px;background-color: rgba(0,0,0,0);transition: 0.5s;}
+        .hd.on{background-color: rgba(200,160,0,0.8);}
+        .hd.off{top: -120px;}
+        
+        .logo{display: block;width: 100px;height: auto;float: left;margin-left: 1em;margin-top: 2em;}
+        .logo img{display: block;width: 100%;}
+        .gnb{float: left;margin-left: 4em;}
+        .gnb li{float: left;width: 140px;position: relative;}
+        .gnb li a{display: block;text-align: center;padding: 1em;line-height: 2.2;font-size: 1.2em;}
+        .gnb li a.dep1{color: #fff;background-color: transparent;}
+        .gnb li:hover a.dep1{background-color: rgba(123,123,123,0.7);color: #333;}
+        
+        .dep2{width: 100%;height: 0;visibility: hidden;opacity: 0;position: absolute;background-color:bisque;}
+        /*
+        visibility: hidden;눈에는 안보이지만 영역은 존재
+        display:none;눈에도 보이지 않고 영역(공간)도 사라짐*/
+        .gnb li:hover .dep2{visibility: visible;opacity: 1;height: auto;}
+        .dep2 li{clear: both;background-color: beige;}
+        .dep2 li a{display: block;color: #333;padding: 0.5em;background-color:rgba(192,98,57,0);font-size: 0.9em;}
+        .dep2 li a:hover{text-decoration: underline;/*background-color: aqua;*/}
+        
+        .lang{display: block;position: absolute;top: 0.5em;right: 18%;z-index: 99;width: 130px;height: 42px;border: 2px solid #fff;color: #fff;line-height: 3;transition: 0.5s;}
+        .lang.on{height: 106px;}
+        .this_lang{display: block;width: 130px;color: #fff;line-height: 2.4;padding: 0.5em;cursor: pointer;background-image: url(image/lang_icon.png);background-repeat: no-repeat;background-position: 0.5em center;}
+        .this_lang:after{content: "▼";position: absolute;right: 1em;}
+        .this_lang.on:after{content: "▲";}
+        .lang_list{display: block;height: 0;overflow: hidden;transition:0.6s;}
+        .lang_list.on{height: 64px;}
+        .lang_list li{clear: both;line-height: 32px;text-indent: 0.8rem;}
+        .lang_list a{display: block;color: #fff;width: 130px;}
+        
+        .lst_btn{display: block;position: absolute;top: 0.5em;right: 12%;width: 48px;height: 48px;border: 2px solid #fff;cursor: pointer;box-sizing: border-box;z-index: 99;}
+        .lst_btn .line{display: block;height: 2px;background-color: #fff;position: absolute;right: 0.5em;transition: 0.4s;z-index: 99;transform: rotate(0deg);}
+        .lst_btn .item1{width: 20px;top: 1.1em;}
+        .lst_btn .item2{width: 30px;top: 0.7em;}
+        .lst_btn:hover .item1{width: 30px;}
+        .lst_btn:hover .item2{width: 20px;}
+        .lst_btn.on .item1{width: 30px;transform: rotate(45deg);top: 23px;}
+        .lst_btn.on .item2{width: 30px;transform: rotate(-45deg);top: 23px;}
+        
+         
+        
+        /* 섹션1 */
+        .vs1{width: 100vw;height: 100vh;position: relative;clear: both;}
+        .vs_lst{width: 400%;height: 100vh;}
+        .vs_lst li{width: 25%;float: left;height: 100vh;background-repeat: no-repeat;background-size: cover;background-position: center center;}
+        .vs_lst li.on{opacity: 1;}
+        .vs_lst li.item1{background-image: url(img/vs_01.jpg);}
+        .vs_lst li.item2{background-image: url(img/vs_05.jpg);}
+        .vs_lst li.item3{background-image: url(img/vs_03.jpg);}
+        .vs_tit{font-size: 2.4em;color: #fff;padding-top: 12em;padding-left: 50px;transition: 0.5s;opacity: 0;}
+        .vs_com{font-size: 1.2em;color: #fff;margin-top: 12em;margin-left: 50px;transition: 0.5s;opacity: 0;}
+        .vs_more{display: block;font-size: 1.4em;color: #fff;margin-top: 12em;margin-left: 50px;border:3px solid #FFF;width: 200px;padding: 0.5em 1em;border-radius: 50px;transition: 0.5s;opacity: 0;position: relative;}
+        .more_arrow{display: block;background-image: url(image/main_btn_arrow.png);background-repeat: no-repeat;width: 39px;height: 5px;position: absolute;top: 0.8em;right: 30px;animation-name:arrow_ani;animation-duration: 0.8s;animation-iteration-count: infinite; }
+       
+        @keyframes arrow_ani{
+            0%{right: 30px;}
+            100%{right: 60px;}
+        }
+        
+        
+        .btn_box1{width: 60px;height: 24px;position: absolute;z-index: 25;left: calc(50% - 30px);bottom: 30px;}
+        .btn_box1 li{width: 20px;height: 20px;position: absolute;}
+        .btn_box1 li.item1{left: 0;}
+        .btn_box1 li.item2{left: 20px;}
+        .btn_box1 li.item3{left: 40px;}
+        .btn_box1 li .btn{display: block;width: 10px;height: 10px;border: 2px solid #fff;border-radius: 6px;margin: 0 auto;cursor: pointer;box-sizing: border-box;background: transparent}
+        .btn_box1 li.on .btn{background: #fff;}
+        
+        .play_btn{position: absolute;bottom: 30px;left: calc(50% + 30px);z-index: 25; width: 20px;height: 24px;}
+        .play_btn li .btn{display: block;width: 12px;height: 12px;background-image: url(image/slick_play.png);background-repeat: no-repeat;background-position: center center;margin: 0 auto;border: 0;}
+        .play_btn li.on .btn{
+            background-image:url(image/slick_stop.png);
+        }
+        
+        /* page2영역 */
+        .vs_lst2 {width: 800%;height: 100vh;}
+        .vs_lst2 li{width: 12.5%;float: left;height: 100vh;background-repeat: no-repeat;background-position: center center;background-size: cover;opacity: 1;}
+        .vs_lst2 li.item1{background-image: url(img/vs_02.jpg);}
+        .vs_lst2 li.item2{background-image: url(image/main_prod_bg2.png);}
+        .vs_lst2 li.item3{background-image: url(image/main_prod_bg3.png);}
+        .vs_lst2 li.item4{background-image: url(image/main_prod_bg4.png);}
+        .vs_lst2 li.item5{background-image: url(image/main_prod_bg5.png);}
+        .vs_lst2 li.item6{background-image: url(image/main_prod_bg6.png);}
+        .vs_lst2 li.item7{background-image: url(image/main_prod_bg7.png);}
+        
+        .tit_box{color: #fff;}
+        .tit_box a{color: #fff;}
+        .vs_lst2 li.on{opacity: 1;}
+        /*page1 타이틀*/
+        .vs_lst li.on .vs_tit{padding-top: 8rem;opacity: 1;}
+        .vs_lst li.on .vs_com{padding-top: 2.8rem;opacity: 1;}
+        .vs_lst li.on .vs_more{margin-top: 3rem;opacity: 1;}
+        /*page2 타이틀*/
+        .vs_lst2 li.on .vs_tit{padding-top: 8rem;opacity: 1;}
+        .vs_lst2 li.on .vs_com{padding-top: 2.8rem;opacity: 1;}
+        .vs_lst2 li.on .vs_more{margin-top: 3rem;opacity: 1;}
+        /*page2의 하단 버튼*/
+        .lr_btn_box{position: absolute;bottom: 0;left: 0;z-index: 25;}
+        .lr_btn_box li{float: left;width: 60px;height: 60px;border-left: 1px solid #cc6666;border-right:1px solid #9c5151; }
+        .lr_btn{display: block;width: 60px;height: 60px;background-repeat: no-repeat;background-position: center center;background-color: #cc6666;cursor: pointer;}/*button태그는 인라인.링크없음*/
+        .lr_btn_box li.left .lr_btn{background-image: url(image/arrow_slick_prev.png);}
+        .lr_btn_box li.right .lr_btn{background-image:url(image/arrow_slick_next.png);}
+        
+        .btn_box2{position: absolute;bottom: 0;left: 122px;width: 3000px;height: 58px;border-top: 1px solid #9c5151;}
+        .btn_box2 li{float: left;}
+        .btn_box2 li button{display: block;width: 480px;height: 58px;color: #fff;font-size: 16px;font-weight: bold;border-right: 1px solid #9c5151;text-align: center;cursor: pointer;}
+        .btn_box2 li.on button{color: #fff;font-size: 20px;}
+        
+        /* page3*/
+        #page3{background-image:url(img/vs_04.jpg);background-repeat: no-repeat;background-position: center center;background-size: cover;}
+        .page_wrap{width: 90%;margin: 0 auto;}
+        #page3 .page_wrap.on .vs_tit{padding-top: 6em;opacity: 1;}
+        #page3 .page_wrap.on .vs_com{padding-top: 2em;opacity: 1;}
+        #page3 .page_wrap.on .vs_more{margin-top: 1.2em;opacity: 1;}
+        
+        /* page4*/
+        .thum_lst{width: 100%;height: 100%;}
+        .thum_lst li{width: 33.333333%;height: 100%;float: left;background-repeat: no-repeat;background-position: center center;background-size: cover;position: relative;}
+        .thum_lst li.item1{background-image: url(img/ban_01.jpg);}
+        .thum_lst li.item2{background-image: url(img/ban_02.jpg);}
+        .thum_lst li.item3{background-image: url(img/ban_03.jpg);}
+        .thum_tit{color: #ccc;}
+        .thum_com{color: #ddd;}
+        .thum_lst li a{display: block;width: 100%;height: 100%;background: rgba(0,0,0,0.5);transition: 0.5s;padding-top: 6rem;box-sizing: border-box;}
+        .thum_lst li a:hover{background: rgba(0,0,0,0)}
+        .thum_lst li .pic_box{clear: both;display: block;width: 120px;height: 120px;background-repeat: no-repeat;background-position: center center;background-color: rgba(255,255,255,0.6);border-radius: 70px;position: absolute;top:15%;left: calc(50% - 60px);}
+        .thum_lst li.item1 .pic_box{background-image: url(img/icon/hat.png);}
+        .thum_lst li.item2 .pic_box{background-image: url(img/icon/scarf.png);}
+        .thum_lst li.item3 .pic_box{background-image: url(img/icon/beanie.png);}
+        .thum_tit{font-size: 2rem;line-height: 3;text-align: center;position: absolute;top: 35%;left: 0;width: 100%;}
+        .thum_com{font-size: 1.1rem;text-align: center;position: absolute;top: 50%;left: 0;width: 100%;}
+        
+        /* 푸터영역*/
+        .ft{clear: both;background-color: #777;padding: 3rem 0rem;}
+        .fnb{width: 90%;margin: 0 auto;}
+        .fnb li{float: left;} 
+        .fnb li a{display: block;color: #fff;padding: 1rem 0;padding-right: 3em;} 
+        
+        .company{clear: both;width: 90%;margin: 0 auto;padding-top: 1rem;word-break: break-all;}
+        .company li{color: #fff;padding-right: 2rem;}
+        .company li.it1{float: left;clear: none;padding-right: 2rem;}
+        .com_lst li{float: left;line-height: 2;font-size: 0.85rem;}
+        .copyright{clear: both;color: #fff ;padding-left: 5%;padding-top: 1em;}
+    </style>
+    <script>
+    $(document).ready(function(){
+    $('.slider').bxslider();  
+    });
+    </script>
+    
+    <script src="https://code.jquery.com/jquery-latest.js"></script>
+    <script>
+        $(document).ready(function(){/* 이 문서가 시작되면*/
+          var ck1=true, ck2=true;//true라는 값을 ck1이라는 변수에 저장
+        //토글버튼 클릭해서 펼침메뉴 열기/닫기 모션
+           //$("선택자").메소드(function(){}) 
+            $(".lst_btn").click(function(){
+               // if(조건문=참){참일시 실행문}else{거짓일 떄 실행문}
+                if(ck1){//만약에 조건이 참이면
+                   $(".collap").addClass("on");//펼침메뉴에 on이라는 클래스를 추가해라(on-right:0)
+                    $(".lst_btn").addClass("on");//X자모양
+                   }else{
+                   $(".collap").removeClass("on");
+                   $(".lst_btn").removeClass("on");  
+                   }
+                ck1=!ck1; // true=false
+            });
+            
+            //펼침메뉴의 대메뉴 클릭해서 서브메뉴 열기
+             $(".collap li").click(function(){
+                 $(".collap li").removeClass("on");
+                $(this).addClass("on");//display:bolck을 제거해라 --> 보이지 않게 해라 $(this).addClass("on");//display:bolck
+                  //this 는 내가 클릭한 
+            }); 
+            
+            //언어 선택메뉴 열기/닫기 모션
+             //한국어박스상자를 클릭하면 .lang_list(en,jp)이 height:0-->height:64px 
+            $(".this_lang").click(function(){
+               if(ck2){
+                  $(".lang_list").addClass("on");
+                  $(".lang").addClass("on");//h:106
+                  $(this).addClass("on");//▲
+                  }else{
+                    $(".lang_list").removeClass("on");
+                     $(".lang").removeClass("on");//h:0
+                     $(this).removeClass("on");//▼
+                  }
+                ck2=!ck2;
+            });
+        });
+    </script>
+   
+    
+</head>
+<body>
+    <!--nav.collap>ul.main_menu>li*5>a.dep1-->
+    <nav class="collap">
+        <ul class="main_menu">
+            <li>
+            <a href="introduction.html#page1" class="dep1">Wild bricks</a>
+             <ul class="dep2">
+             </ul>
+            </li>
+            <li>
+            <a href="reseach.html#page1" class="dep1">New Arrivals</a>
+             <ul class="dep2">
+             </ul>
+            </li>
+            <li>
+            <a href="policy.html#page1" class="dep1">HeadWear</a>
+            <ul class="dep2">
+                <li><a href="policy.html#page1">Newboy</a></li>
+                <li><a href="policy.html#page1">Beret</a></li>
+                <li><a href="policy.html#page1">Hunting</a></li>
+                <li><a href="policy.html#page1">Cap</a></li>
+                <li><a href="policy.html#page1">Brimless</a></li>
+                <li><a href="policy.html#page1">Bucket</a></li>
+                <li><a href="policy.html#page2">Fedora</a></li>
+                <li><a href="policy.html#page2">Kint</a></li>
+                <li><a href="policy.html#page2">Trapper</a></li>
+             </ul>
+            </li>
+            <li>
+            <a href="overview.html#page1" class="dep1">Muffler</a>
+             <ul class="dep2">
+                 <li><a href="overview.html#page1">Scarf</a></li>
+                 <li><a href="overview.html#page2">Bandana</a></li>
+                 <li><a href="overview.html#page3">Stole</a></li>
+                 <li><a href="overview.html#page4">Knit</a></li>
+                 <li><a href="overview.html#page5">Holder</a></li>
+                 
+             </ul>
+            </li>
+            <li>
+            <a href="news.html#page1" class="dep1">Bag</a>
+             <ul class="dep2">
+                 <li><a href="news.html#page1">Backpack</a></li>
+                 <li><a href="news.html#page2">Tole</a></li>
+                 <li><a href="news.html#page3">Shoulder</a></li>
+                 <li><a href="news.html#page4">Clutch</a></li>
+                 <li><a href="news.html#page3">Pouch</a></li>
+                 <li><a href="news.html#page4">Eco</a></li>
+             </ul>
+            </li>
+        <li>
+            <a href="news.html#page1" class="dep1">Acc</a>
+             <ul class="dep2">
+                 <li><a href="news.html#page1">Socks</a></li>
+                 <li><a href="news.html#page2">Card Case</a></li>
+                 <li><a href="news.html#page3">Tie</a></li>
+                 <li><a href="news.html#page4">Gloves</a></li>
+                 <li><a href="news.html#page3">Etc</a></li>
+                 <li><a href="news.html#page4">Lifestyle</a></li>
+             </ul>
+        </li>
+        <li>
+            <a href="news.html#page1" class="dep1">Sale</a>
+             <ul class="dep2">
+             </ul>
+            </li>
+        </ul>
+    </nav>
+    <haeder class="hd">
+        <a href="index.html" class="logo"><img src="img/logo.png" alt="logo"></a>
+        <nav class="gnb">
+        <ul class="main_menu">
+            <li>
+            <a href="introduction.html#page1" class="dep1">Wild bricks</a>
+             <ul class="dep2">
+             </ul>
+            </li>
+            <li>
+            <a href="reseach.html#page1" class="dep1">New Arrivals</a>
+             <ul class="dep2">
+             </ul>
+            </li>
+            <li>
+            <a href="policy.html#page1" class="dep1">HeadWear</a>
+            <ul class="dep2">
+                <li><a href="policy.html#page1">Newboy</a></li>
+                <li><a href="policy.html#page1">Beret</a></li>
+                <li><a href="policy.html#page1">Hunting</a></li>
+                <li><a href="policy.html#page1">Cap</a></li>
+                <li><a href="policy.html#page1">Brimless</a></li>
+                <li><a href="policy.html#page1">Bucket</a></li>
+                <li><a href="policy.html#page2">Fedora</a></li>
+                <li><a href="policy.html#page2">Kint</a></li>
+                <li><a href="policy.html#page2">Trapper</a></li>
+             </ul>
+            </li>
+            <li>
+            <a href="overview.html#page1" class="dep1">Muffler</a>
+             <ul class="dep2">
+                 <li><a href="overview.html#page1">Scarf</a></li>
+                 <li><a href="overview.html#page2">Bandana</a></li>
+                 <li><a href="overview.html#page3">Stole</a></li>
+                 <li><a href="overview.html#page4">Knit</a></li>
+                 <li><a href="overview.html#page5">Holder</a></li>
+             </ul>
+            </li>
+            <li>
+            <a href="news.html#page1" class="dep1">Bag</a>
+             <ul class="dep2">
+            <li><a href="news.html#page1">Backpack</a></li>
+                 <li><a href="news.html#page2">Tole</a></li>
+                 <li><a href="news.html#page3">Shoulder</a></li>
+                 <li><a href="news.html#page4">Clutch</a></li>
+                 <li><a href="news.html#page3">Pouch</a></li>
+                 <li><a href="news.html#page4">Eco</a></li>
+             </ul>
+            </li>
+            <li>
+            <a href="news.html#page1" class="dep1">Acc</a>
+             <ul class="dep2">
+            <li><a href="news.html#page1">Socks</a></li>
+                 <li><a href="news.html#page2">Card Case</a></li>
+                 <li><a href="news.html#page3">Tie</a></li>
+                 <li><a href="news.html#page4">Gloves</a></li>
+                 <li><a href="news.html#page3">Etc</a></li>
+                 <li><a href="news.html#page4">Lifestyle</a></li>
+             </ul>
+             </li>
+             <li>
+            <a href="news.html#page1" class="dep1">Sale</a>
+             <ul class="dep2">
+             </ul>
+             </li>
+        </ul>
+    </nav>
+        <div class="lang">
+            <button class="this_lang">한국어</button>
+            <ul class="lang_list">
+                <li class="item1"><a href="index_en.html">English</a></li>
+                <li class="item2"><a href="index_jp.html">Japan</a></li>
+            </ul>
+        </div>
+        <!--div.lst_btn>span.line.item$*2-->
+        <div class="lst_btn">
+            <span class="line item1"></span>
+            <span class="line item2"></span>
+        </div>
+    </haeder>
+    <section class="page sc_data" id="page1">
+       <!-- figure.vs1>ul.vs_list>li.item$*3>div.tit_box>h3.vs_tit+p.vs_com+a.vs_more>span.*2-->
+        <figure class="vs1">
+           <ul class="vs_lst">
+                <li class="item1 on">
+                    <div class="tit_box">
+                        <h3 class="vs_tit"><!--GLOBAL NO.1
+High Functional Processing Film--></h3>
+                        <p class="vs_com"><!--㈜서일은 세계 최고의 고기능성 가공 필름을 생산 합니다.--></p>
+                         <a href="" class="vs_more">      <span class="more_txt">more</span>
+                            <span class="more_arrow"></span>
+                        </a>
+                    </div>
+                </li>
+                <li class="item2">
+                    <div class="tit_box">
+                        <h3 class="vs_tit"><!--GLOBAL NO.1
+High Functional Processing Film--></h3>
+                        <p class="vs_com"><!--㈜서일은 세계 최고의 고기능성 가공 필름을 생산 합니다.--></p>
+                         <a href="" class="vs_more">      <span class="more_txt">more</span>
+                            <span class="more_arrow"></span>
+                        </a>
+                    </div>
+                </li>
+                <li class="item3">
+                    <div class="tit_box">
+                        <h3 class="vs_tit"><!--GLOBAL NO.1
+High Functional Processing Film--></h3>
+                        <p class="vs_com"><!--㈜서일은 세계 최고의 고기능성 가공 필름을 생산 합니다.--></p>
+                         <a href="" class="vs_more">      <span class="more_txt">more</span>
+                            <span class="more_arrow"></span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+          <!--  ul.btn_box1>li.btn_fr.item$*3>button.btn
+            ul.play_btn>li.item4>button-->
+          <ul class="btn_box1">
+              <li class="btn_fr item1 on"><button class="btn"></button></li>
+              <li class="btn_fr item2"><button class="btn"></button></li>
+              <li class="btn_fr item3"><button class="btn"></button></li>
+          </ul>
+            <ul class="play_btn">
+                <li class="item4"><button class="btn"></button></li>
+            </ul>
+        </figure>
+    </section>
+    <section class="page sc_data" id="page2">
+        <!--figure.vs2>ul.vs_lst2>li.item$*7-->
+        <figure class="vs2">
+            <ul class="vs_lst2">
+                <li class="item1 on">
+                    <div class="tit_box">
+                        <p class="vs_com"><!--다양한 분야에서 활용 되고 있는 ㈜서일의 고기능성 가공 필름을 소개 합니다.--></p>
+                        <a href="" class="vs_more">
+                            <span class="more_txt">more</span>
+                            <span class="more_arrow"></span>
+                        </a>
+                    </div>
+                </li>
+                <li class="item2">
+                    <div class="tit_box">
+                        <h3 class="vs_tit"><!--세계일류의 High functionality--><br>
+                        <!--가공 필름--></h3>
+                        <p class="vs_com"><!--다양한 분야에서 활용 되고 있는 ㈜서일의 고기능성 가공 필름을 소개 합니다.--></p>
+                        <a href="" class="vs_more">
+                            <span class="more_txt">more</span>
+                            <span class="more_arrow"></span>
+                        </a>
+                    </div>
+                </li>
+                <li class="item3">
+                    <div class="tit_box">
+                        <h3 class="vs_tit"><!--세계일류의 High functionality--><br>
+                        가공 필름</h3>
+                        <p class="vs_com"><!--다양한 분야에서 활용 되고 있는 ㈜서일의 고기능성 가공 필름을 소개 합니다.--></p>
+                        <a href="" class="vs_more">
+                            <span class="more_txt">more</span>
+                            <span class="more_arrow"></span>
+                        </a>
+                    </div>
+                </li>
+                <li class="item4">
+                    <div class="tit_box">
+                        <h3 class="vs_tit"><!--세계일류의 High functionality--><br>
+                        </h3>
+                        <p class="vs_com"><!--다양한 분야에서 활용 되고 있는 ㈜서일의 고기능성 가공 필름을 소개 합니다.--></p>
+                        <a href="" class="vs_more">
+                            <span class="more_txt"></span>
+                            <span class="more_arrow"></span>
+                        </a>
+                    </div>
+                </li>
+                <li class="item5">
+                    <div class="tit_box">
+                        <h3 class="vs_tit"><br>
+                        </h3>
+                        <p class="vs_com"></p>
+                        <a href="" class="vs_more">
+                            <span class="more_txt"></span>
+                            <span class="more_arrow"></span>
+                        </a>
+                    </div>
+                </li>
+                <li class="item6">
+                    <div class="tit_box">
+                        <h3 class="vs_tit"><br>
+                       </h3>
+                        <p class="vs_com"></p>
+                        <a href="" class="vs_more">
+                            <span class="more_txt"></span>
+                            <span class="more_arrow"></span>
+                        </a>
+                    </div>
+                </li>
+           <li class="item7">
+                    <div class="tit_box">
+                        <h3 class="vs_tit"</h3>
+                        <p class="vs_com"></p>
+                        <a href="" class="vs_more">
+                            <span class="more_txt"></span>
+                            <span class="more_arrow"></span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+           <!-- ul.lr_btn_box>li.*2>button.lr_btn
+            div.btn_box2>ul.btn_fr2>li.lb_btn_fr.item$*7>button.lb_btn-->
+             <ul class="lr_btn_box">
+                 <li class="left"><button class="lr_btn"></button></li>
+                 <li class="right"><button class="lr_btn"></button></li>
+             </ul>
+          <div class="btn_box2">
+                <ul class="btn_fr2">
+                    <li class="lb_btn_fr item1 on"><button class="lb_btn">HeadWear</button></li>
+                    <li class="lb_btn_fr item2"><button class="lb_btn">Muffler</button></li>
+                    <li class="lb_btn_fr item3"><button class="lb_btn">Bag</button></li>
+                    <li class="lb_btn_fr item4"><button class="lb_btn">Acc</button></li>
+                </ul>
+            </div>
+        </figure>
+    </section>
+    <section class="page sc_data" id="page3">
+       <!-- ul>li>div>h3+p+a-->
+       <!-- div.page_wrap>div.tit_box>h3.vs_tit+p.vs_com+a.vs_more>span.*2-->
+        <div class="page_wrap on">
+     
+         <div class="tit_box">
+                <h3 class="vs_tit"></h3>
+                <p class="vs_com"></p>
+                <a href="" class="vs_more">
+                    <span class="more_txt">more</span>
+                    <span class="more_arrow"></span>
+                </a>
+            </div>
+        </div>
+    </section>
+    <section class="page sc_data" id="page4">
+       <!--ul.thum_lst>li.item$*3>a>div.pic_box+h3.thum_tit+p.thum_com -->
+       <ul class="thum_lst">
+           <li class="item1"><a href="">
+                   <div class="pic_box"></div>
+                   <h3 class="thum_tit">NEWS BOY</h3>
+                   <p class="thum_com">19세기 말 ~ 20세기 <br> 미국과 유럽 등지의 신문배달 소년들이 주로 썼었던<br>
+                   모자를 모티브로 만들어진 뉴스보이캡입니다.</p>
+               </a></li>
+           <li class="item2"><a href="">
+                   <div class="pic_box"></div>
+                   <h3 class="thum_tit">MILITARY KNIT MUFFLER</h3>
+                   <p class="thum_com">2차 세계대전 당시,미군 적십작에게 보급되었던<br>울 스카프를 재해석하여 제작된<br>와일드브릭스의 밀리터리 니트 머플러입니다.</p>
+               </a></li>
+           <li class="item3"><a href="">
+                   <div class="pic_box"></div>
+                   <h3 class="thum_tit">MGL WOOL BRIMLESS CAP</h3>
+                   <p class="thum_com">해군들이 즐겨 쓰던 와치캡을 모티브로 <br>챙(BRIM)이 생략된 디자인의 브림리스 캡입니다.<br>울혼방 소재를 사용하여 보온성이 탁월합니다.</p>
+               </a></li>
+       </ul>
+    </section>
+    <footer class="ft">
+    <!--nav.fnb>ul.menu>li.item$*2>a
+    ul.company>li.ti$*3
+    p.copyright-->
+    <nav class="fnb">
+        <ul class="menu">
+            <li class="item1"><a href="">개인정보취급방침</a></li>
+            <li class="item2"><a href="">이용약관</a></li>
+        </ul>
+    </nav>
+    <ul class="company">
+        <li class="it1">
+            <ul class="com_lst">
+                <li>Wild Bricks</li>
+                <li>박상유(와일드브릭스)</li>
+                <li>사업자등록번호 : 170-17-00888</li>
+            </ul>
+        </li>
+        <li class="it2">
+             <ul class="com_lst">
+                 <li> 본사 : 서울특별시 마포구 독막로 35 (합정동) 2층 </li>
+                 <li> TEL. 070-8885-0909</li>
+                 <li> MON - FRI AM 11:00 - PM 05:00</li>
+             </ul>
+        </li>   
+        <li class="it3">
+            <ul class="com_lst">
+                <li>  MAIL ORDER LICENSE 제 2018-서울마포-1000 호</li>
+                <li>E-MAIL contact@wildbricks.com</li>
+            </ul> 
+        </li>
+    </ul>
+    <p class="copyright">
+    Copyright &copy; 2019 SEOILFILM All rights reserved.</p>
+    </footer>
+
+
+
+
+</body>
+</html>

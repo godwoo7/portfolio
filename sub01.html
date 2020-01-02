@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="imagetoolbar" content="no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="robots" content="noindex, nofollow">
+
+    <title>반응형2-http://www.seoilfilm.com</title>
+    <link rel="stylesheet" href="https://cdn.rawgit.com/hiun/NanumSquare/master/nanumsquare.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Liu+Jian+Mao+Cao&display=swap">
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./jquery.js">
+    
+    <style>
+        body,html{clear: both;position: relative;}
+        /* 사이드메뉴*/
+        .collap{position: fixed;top: 0;right: -110%;z-index: 80;background-color: rgba(123,123,123,5);width: 100vw;height: 100vh;padding-top: 90px;box-sizing: border-box;transition: 0.7s;}
+        .collap.on{right: 0;}
+        .collap li{clear: both;position: relative;}
+        .collap li a{display: block;height: 32px;}
+        .collap li a.dep1{color: #ccc;line-height: 3;padding-left: 3em;height: 42px;font-size: 1.2rem;font-weight: bold;}
+        .collap li a.dep1:after{content: "▼";position: absolute;left: 70%;}
+        .collap li.on a.dep1:after{content: "▲"}
+        .collap li ul.dep2{
+            opacity: 1;width: 100%;height: auto;background: transparent;position: static;
+            display: none;
+        }
+        .collap li.on ul.dep2{/* 대메뉴 li가 on상태이면 .dep2(서브메뉴)가 보이게 해라 */
+            display: block;}
+        .collap li ul.dep2 li{
+            line-height: 2;
+        }
+         .collap li ul.dep2 li a{
+            color: #333;font-size: 1rem;
+        }
+        
+        /* 헤더영역*/
+        .hd{clear: both;position: fixed;top: 0;left: 0;z-index: 90;width: 100%;height: 90px;background-color: rgba(0,0,0,0);transition: 0.5s;}
+        .hd.on{background-color: rgba(200,160,0,0.8);}
+        .hd.off{top: -120px;}
+        
+        .logo{display: block;width: 100px;height: auto;float: left;margin-left: 1em;margin-top: 2em;}
+        .logo img{display: block;width: 100%;}
+        .gnb{float: left;margin-left: 4em;}
+        .gnb li{float: left;width: 140px;position: relative;}
+        .gnb li a{display: block;text-align: center;padding: 1em;line-height: 2.2;font-size: 1.2em;}
+        .gnb li a.dep1{color: #333;background-color: transparent;}
+        .gnb li:hover a.dep1{background-color: rgba(123,123,123,0.7);color: #333;}
+        
+        .dep2{width: 100%;height: 0;visibility: hidden;opacity: 0;position: absolute;background-color:bisque;}
+        /*
+        visibility: hidden;눈에는 안보이지만 영역은 존재
+        display:none;눈에도 보이지 않고 영역(공간)도 사라짐*/
+        .gnb li:hover .dep2{visibility: visible;opacity: 1;height: auto;}
+        .dep2 li{clear: both;background-color: beige;}
+        .dep2 li a{display: block;color: #333;padding: 0.5em;background-color:rgba(192,98,57,0);font-size: 0.9em;}
+        .dep2 li a:hover{text-decoration: underline;/*background-color: aqua;*/}
+        
+        .lang{display: block;position: absolute;top: 0.5em;right: 18%;z-index: 99;width: 130px;height: 42px;border: 2px solid #333;color: #333;line-height: 3;transition: 0.5s;}
+        .lang.on{height: 106px;}
+        .this_lang{display: block;width: 130px;color: #333;line-height: 2.4;padding: 0.5em;cursor: pointer;background-image: url(image/lang_icon.png);background-repeat: no-repeat;background-position: 0.5em center;}
+        .this_lang:after{content: "▼";position: absolute;right: 1em;}
+        .this_lang.on:after{content: "▲";}
+        .lang_list{display: block;height: 0;overflow: hidden;transition:0.6s;}
+        .lang_list.on{height: 64px;}
+        .lang_list li{clear: both;line-height: 32px;text-indent: 0.8rem;}
+        .lang_list a{display: block;color: #333;width: 130px;}
+        
+        .lst_btn{display: block;position: absolute;top: 0.5em;right: 12%;width: 48px;height: 48px;border: 2px solid #333;cursor: pointer;box-sizing: border-box;z-index: 99;}
+        .lst_btn .line{display: block;height: 2px;background-color: #333;position: absolute;right: 0.5em;transition: 0.4s;z-index: 99;transform: rotate(0deg);}
+        .lst_btn .item1{width: 20px;top: 1.1em;}
+        .lst_btn .item2{width: 30px;top: 0.7em;}
+        .lst_btn:hover .item1{width: 30px;}
+        .lst_btn:hover .item2{width: 20px;}
+        .lst_btn.on .item1{width: 30px;transform: rotate(45deg);top: 23px;}
+        .lst_btn.on .item2{width: 30px;transform: rotate(-45deg);top: 23px;}
+        
+         
+        
+        /* 섹션1 */
+        #page1 #vdo {
+            width: 100%;
+            height: 100%;
+        }
+
+        #page1 #vd1 {
+            display: block;
+            width: 100%;
+            min-height: 100%;
+        }
+        
+       
+        @keyframes arrow_ani{
+            0%{right: 30px;}
+            100%{right: 60px;}
+        }
+    
+    
+        
+        /* page2영역 */
+        #page2{background-repeat: no-repeat;padding: 0;margin: 0;}
+        .txt {display: block;padding: 30px;text-align: center;font-weight: bold;font-size: 30px;}
+        .txt:hover {text-decoration:underline;animation-duration: 4s;}
+        .menu1{clear: both;display:block; overflow: hidden;}
+        .menu1 a{float: left;padding: 30px;padding-left: 150px;}
+        .menu1 a li{float: left;}
+        .menu2{clear: both;display: block;overflow: hidden;}
+        .menu2 a{float: right;padding: 10px;margin-right: 5px;font-size: 5px;}
+        .menu2 a li{font-weight: bold;}
+       
+        /*상품이미지*/
+        .thumb{display: block;position: relative;}
+        .thumb a{display: block;overflow: hidden;float: left;width: 25%;height: auto;padding-top: 50px;margin: 0 auto;}
+        .thumb a .thumnail{clear: both; width: 380px;height: 380px;}
+        
+   
+        
+ 
+      
+       
+        
+        /* 푸터영역*/
+        .ft{clear: both;background-color: #777;padding: 3rem 0rem;}
+        .fnb{width: 90%;margin: 0 auto;}
+        .fnb li{float: left;} 
+        .fnb li a{display: block;color: #fff;padding: 1rem 0;padding-right: 3em;} 
+        
+        .company{clear: both;width: 90%;margin: 0 auto;padding-top: 1rem;word-break: break-all;}
+        .company li{color: #fff;padding-right: 2rem;}
+        .company li.it1{float: left;clear: none;padding-right: 2rem;}
+        .com_lst li{float: left;line-height: 2;font-size: 0.85rem;}
+        .copyright{clear: both;color: #fff ;padding-left: 5%;padding-top: 1em;}
+    </style>
+    <script>
+    $(document).ready(function(){
+    $('.slider').bxslider();  
+    });
+    </script>
+    
+    <script src="https://code.jquery.com/jquery-latest.js"></script>
+    <script>
+        $(document).ready(function(){/* 이 문서가 시작되면*/
+          var ck1=true, ck2=true;//true라는 값을 ck1이라는 변수에 저장
+        //토글버튼 클릭해서 펼침메뉴 열기/닫기 모션
+           //$("선택자").메소드(function(){}) 
+            $(".lst_btn").click(function(){
+               // if(조건문=참){참일시 실행문}else{거짓일 떄 실행문}
+                if(ck1){//만약에 조건이 참이면
+                   $(".collap").addClass("on");//펼침메뉴에 on이라는 클래스를 추가해라(on-right:0)
+                    $(".lst_btn").addClass("on");//X자모양
+                   }else{
+                   $(".collap").removeClass("on");
+                   $(".lst_btn").removeClass("on");  
+                   }
+                ck1=!ck1; // true=false
+            });
+            
+            //펼침메뉴의 대메뉴 클릭해서 서브메뉴 열기
+             $(".collap li").click(function(){
+                 $(".collap li").removeClass("on");
+                $(this).addClass("on");//display:bolck을 제거해라 --> 보이지 않게 해라 $(this).addClass("on");//display:bolck
+                  //this 는 내가 클릭한 
+            }); 
+            
+            //언어 선택메뉴 열기/닫기 모션
+             //한국어박스상자를 클릭하면 .lang_list(en,jp)이 height:0-->height:64px 
+            $(".this_lang").click(function(){
+               if(ck2){
+                  $(".lang_list").addClass("on");
+                  $(".lang").addClass("on");//h:106
+                  $(this).addClass("on");//▲
+                  }else{
+                    $(".lang_list").removeClass("on");
+                     $(".lang").removeClass("on");//h:0
+                     $(this).removeClass("on");//▼
+                  }
+                ck2=!ck2;
+            });
+        });
+        //호버시 확대
+        $(Function(){
+            $('th_img').hover(Function(){
+            $(this).find('.thumnail').animate({scale:'+=0.2'},300);
+        },
+          function(){
+    $(this).find('.thumnail').animate({scale:'-=0.2'},300);
+                }
+            );
+            
+        });
+    </script>
+   
+    
+</head>
+<body>
+    <!--nav.collap>ul.main_menu>li*5>a.dep1-->
+    <nav class="collap">
+        <ul class="main_menu">
+            <li>
+            <a href="introduction.html#page1" class="dep1">Wild bricks</a>
+             <ul class="dep2">
+             </ul>
+            </li>
+            <li>
+            <a href="reseach.html#page1" class="dep1">New Arrivals</a>
+             <ul class="dep2">
+             </ul>
+            </li>
+            <li>
+            <a href="policy.html#page1" class="dep1">HeadWear</a>
+            <ul class="dep2">
+                <li><a href="policy.html#page1">Newboy</a></li>
+                <li><a href="policy.html#page1">Beret</a></li>
+                <li><a href="policy.html#page1">Hunting</a></li>
+                <li><a href="policy.html#page1">Cap</a></li>
+                <li><a href="policy.html#page1">Brimless</a></li>
+                <li><a href="policy.html#page1">Bucket</a></li>
+                <li><a href="policy.html#page2">Fedora</a></li>
+                <li><a href="policy.html#page2">Kint</a></li>
+                <li><a href="policy.html#page2">Trapper</a></li>
+             </ul>
+            </li>
+            <li>
+            <a href="overview.html#page1" class="dep1">Muffler</a>
+             <ul class="dep2">
+                 <li><a href="overview.html#page1">Scarf</a></li>
+                 <li><a href="overview.html#page2">Bandana</a></li>
+                 <li><a href="overview.html#page3">Stole</a></li>
+                 <li><a href="overview.html#page4">Knit</a></li>
+                 <li><a href="overview.html#page5">Holder</a></li>
+                 
+             </ul>
+            </li>
+            <li>
+            <a href="news.html#page1" class="dep1">Bag</a>
+             <ul class="dep2">
+                 <li><a href="news.html#page1">Backpack</a></li>
+                 <li><a href="news.html#page2">Tole</a></li>
+                 <li><a href="news.html#page3">Shoulder</a></li>
+                 <li><a href="news.html#page4">Clutch</a></li>
+                 <li><a href="news.html#page3">Pouch</a></li>
+                 <li><a href="news.html#page4">Eco</a></li>
+             </ul>
+            </li>
+        <li>
+            <a href="news.html#page1" class="dep1">Acc</a>
+             <ul class="dep2">
+                 <li><a href="news.html#page1">Socks</a></li>
+                 <li><a href="news.html#page2">Card Case</a></li>
+                 <li><a href="news.html#page3">Tie</a></li>
+                 <li><a href="news.html#page4">Gloves</a></li>
+                 <li><a href="news.html#page3">Etc</a></li>
+                 <li><a href="news.html#page4">Lifestyle</a></li>
+             </ul>
+        </li>
+        <li>
+            <a href="news.html#page1" class="dep1">Sale</a>
+             <ul class="dep2">
+             </ul>
+            </li>
+        </ul>
+    </nav>
+    <haeder class="hd">
+        <a href="index.html" class="logo"><img src="img/logo.png" alt="logo"></a>
+        <nav class="gnb">
+        <ul class="main_menu">
+            <li>
+            <a href="introduction.html#page1" class="dep1">Wild bricks</a>
+             <ul class="dep2">
+             </ul>
+            </li>
+            <li>
+            <a href="reseach.html#page1" class="dep1">New Arrivals</a>
+             <ul class="dep2">
+             </ul>
+            </li>
+            <li>
+            <a href="policy.html#page1" class="dep1">HeadWear</a>
+            <ul class="dep2">
+                <li><a href="policy.html#page1">Newboy</a></li>
+                <li><a href="policy.html#page1">Beret</a></li>
+                <li><a href="policy.html#page1">Hunting</a></li>
+                <li><a href="policy.html#page1">Cap</a></li>
+                <li><a href="policy.html#page1">Brimless</a></li>
+                <li><a href="policy.html#page1">Bucket</a></li>
+                <li><a href="policy.html#page2">Fedora</a></li>
+                <li><a href="policy.html#page2">Kint</a></li>
+                <li><a href="policy.html#page2">Trapper</a></li>
+             </ul>
+            </li>
+            <li>
+            <a href="overview.html#page1" class="dep1">Muffler</a>
+             <ul class="dep2">
+                 <li><a href="overview.html#page1">Scarf</a></li>
+                 <li><a href="overview.html#page2">Bandana</a></li>
+                 <li><a href="overview.html#page3">Stole</a></li>
+                 <li><a href="overview.html#page4">Knit</a></li>
+                 <li><a href="overview.html#page5">Holder</a></li>
+             </ul>
+            </li>
+            <li>
+            <a href="news.html#page1" class="dep1">Bag</a>
+             <ul class="dep2">
+            <li><a href="news.html#page1">Backpack</a></li>
+                 <li><a href="news.html#page2">Tole</a></li>
+                 <li><a href="news.html#page3">Shoulder</a></li>
+                 <li><a href="news.html#page4">Clutch</a></li>
+                 <li><a href="news.html#page3">Pouch</a></li>
+                 <li><a href="news.html#page4">Eco</a></li>
+             </ul>
+            </li>
+            <li>
+            <a href="news.html#page1" class="dep1">Acc</a>
+             <ul class="dep2">
+            <li><a href="news.html#page1">Socks</a></li>
+                 <li><a href="news.html#page2">Card Case</a></li>
+                 <li><a href="news.html#page3">Tie</a></li>
+                 <li><a href="news.html#page4">Gloves</a></li>
+                 <li><a href="news.html#page3">Etc</a></li>
+                 <li><a href="news.html#page4">Lifestyle</a></li>
+             </ul>
+             </li>
+             <li>
+            <a href="news.html#page1" class="dep1">Sale</a>
+             <ul class="dep2">
+             </ul>
+             </li>
+        </ul>
+    </nav>
+        <div class="lang">
+            <button class="this_lang">한국어</button>
+            <ul class="lang_list">
+                <li class="item1"><a href="index_en.html">English</a></li>
+                <li class="item2"><a href="index_jp.html">Japan</a></li>
+            </ul>
+        </div>
+        <!--div.lst_btn>span.line.item$*2-->
+        <div class="lst_btn">
+            <span class="line item1"></span>
+            <span class="line item2"></span>
+        </div>
+    </haeder>
+    <section class="page sc_data" id="page1">
+       <!-- figure.vs1>ul.vs_list>li.item$*3>div.tit_box>h3.vs_tit+p.vs_com+a.vs_more>span.*2-->
+        <figure id="vdo">
+                <video src="img/vdo/vdo.mp4" id="vd1" autoplay loop muted></video>
+            </figure>
+    
+    </section>
+    <section class="page sc_data" id="page2">
+        <!--figure.vs2>ul.vs_lst2>li.item$*7-->
+     <h2 class="txt"><a href="sub01.html">BAG</a></h2>
+     <ul class="menu1">
+         <li><a href="">BACKPACK</a></li>
+         <li><a href="">TOTE</a></li>
+         <li><a href="">SHOULDER</a></li>
+         <li><a href="">CROSS</a></li>
+         <li><a href="">CLUTCH</a></li>
+         <li><a href="">POOCH</a></li>
+         <li><a href="">ECO</a></li>
+     </ul>
+     <ul class="menu2">
+         <li><a href="">NEW</a></li>
+         <li><a href="">NAME</a></li>
+         <li><a href="">LOW PRICE</a></li>
+         <li><a href="">HIGHT PRICE</a></li>
+         <li><a href="">MADE</a></li>
+         <li><a href="">HIT</a></li>
+         <li><a href="">REVIEW</a></li>
+     </ul>
+     <ul class="thumb">
+            <div class="th_img">
+             <a href="#"><img src="img/thumnail/thum01.jpg" alt="CN TIE BAG (ivory)" class="thumnail">
+             </a></div>
+             <div class="th_img">
+             <a href="#"><img src="img/thumnail/thum02.jpg" alt="HBT TWO-WAY BAG (brown)" class="thumnail"></a></div>
+            <div class="th_img">
+                <a href="#"><img src="img/thumnail/thum03.jpg" alt="CN TIE BAG (khaki)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum04.jpg" alt="HBT TWO-WAY BAG (ivory)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum05.jpg" alt="HBT TWO-WAY BAG (ivory)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum06.jpg" alt="HBT TWO-WAY BAG (brown))" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum07.jpg" alt="HBT TWO-WAY BAG (khaki))" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum08.jpg" alt="HBT TWO-WAY BAG (black)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum09.jpg" alt="ROUND GARDEN BAG (brown)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum10.jpg" alt="ROUND GARDEN BAG (khaki)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum11.jpg" alt="ROUND GARDEN BAG (black)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum12.jpg" alt="BS HELMET BAG (brown)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum13.jpg" alt="BS HELMET BAG (khaki)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum14.jpg" alt="BS HELMET BAG (burgundy)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum15.jpg" alt="BS HELMET BAG (navy)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum16.jpg" alt="BS HELMET BAG (black)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum17.jpg" alt="ROLL-TOP BACKPACK (beige)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum18.jpg" alt="ROLL-TOP BACKPACK (khaki)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum19.jpg" alt="ROLL-TOP BACKPACK (grey)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum20.jpg" alt="ROLL-TOP BACKPACK (black)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum21.jpg" alt="GARDEN BAG (ivory)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum22.jpg" alt="GARDEN BAG (olive)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum23.jpg" alt="GARDEN BAG (navy)" class="thumnail"></a></div>
+               <div class="th_img">
+                   <a href="#"><img src="img/thumnail/thum24.jpg" alt="GARDEN BAG (black)" class="thumnail"></a></div>
+     </ul>              
+    </section>
+    
+       <!--ul.thum_lst>li.item$*3>a>div.pic_box+h3.thum_tit+p.thum_com -->
+       
+    <footer class="ft">
+    <!--nav.fnb>ul.menu>li.item$*2>a
+    ul.company>li.ti$*3
+    p.copyright-->
+    <nav class="fnb">
+        <ul class="menu">
+            <li class="item1"><a href="">개인정보취급방침</a></li>
+            <li class="item2"><a href="">이용약관</a></li>
+        </ul>
+    </nav>
+    <ul class="company">
+        <li class="it1">
+            <ul class="com_lst">
+                <li>Wild Bricks</li>
+                <li>박상유(와일드브릭스)</li>
+                <li>사업자등록번호 : 170-17-00888</li>
+            </ul>
+        </li>
+        <li class="it2">
+             <ul class="com_lst">
+                 <li> 본사 : 서울특별시 마포구 독막로 35 (합정동) 2층 </li>
+                 <li> TEL. 070-8885-0909</li>
+                 <li> MON - FRI AM 11:00 - PM 05:00</li>
+             </ul>
+        </li>   
+        <li class="it3">
+            <ul class="com_lst">
+                <li>  MAIL ORDER LICENSE 제 2018-서울마포-1000 호</li>
+                <li>E-MAIL contact@wildbricks.com</li>
+            </ul> 
+        </li>
+    </ul>
+    <p class="copyright">
+    Copyright &copy; 2019 SEOILFILM All rights reserved.</p>
+    </footer>
+
+
+
+
+</body>
+</html>
